@@ -1,2 +1,3 @@
-# druid-k8s
-Deploying druid on k8s using druid operator
+# druid-prometheus
+
+A simple prometheus exporter for druid.
