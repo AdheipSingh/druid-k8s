@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      druid: metrics 
+  template:
+    metadata:
+      labels:
+        druid: metrics
+    spec:
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+           requiredDuringSchedulingIgnoredDuringExecution:
+             nodeSelectorTerms:
+             - matchExpressions:
+               - key: node-type
+                 operator: In
+                 values:
+                 - druid-query
+      containers:
+        - name: druid
+          image: singh1234/druid-prometheus:v0.1
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "OVERLORD_EP"
+              value: "http://router-druid-cluster-routers-service:8888"

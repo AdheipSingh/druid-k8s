@@ -1,7 +1,7 @@
 package utils
 
 import (
-	models "druid-exporter/model"
+	models "druid-prometheus/model"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -16,13 +16,13 @@ func HTTPGetMetric(url string) models.Metric {
 		log.Fatalf("NewRequest construct error : %d", err)
 	}
 
-	//s	req.SetBasicAuth(os.Getenv("USERNAME"), os.Getenv("PASSWORD"))
-
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Fatalf("GET request error on URL specified : %d", err)
 
 	}
+
+	log.Printf("Response:[%s],Method:[%s]", resp.Status, resp.Request.Method)
 
 	defer resp.Body.Close()
 
@@ -37,4 +37,9 @@ func HTTPGetMetric(url string) models.Metric {
 	}
 
 	return generic
+}
+
+func url(overlordsep, path string) string {
+	url := overlordsep + path
+	return url
 }
